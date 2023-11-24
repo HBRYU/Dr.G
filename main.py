@@ -1,9 +1,13 @@
 import tkinter as tk
 import tkinter.font as tkFont
-import tkmacosx as tkm
 import os
 
-os.system('pip install tkmacosx')
+try:
+    import tkmacosx as tkm
+except:
+    os.system('pip install tkmacosx')
+
+
 
 # pi = tk.PhotoImage
 #
