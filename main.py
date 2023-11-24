@@ -24,4 +24,3 @@ button2.grid(row=0, column=1, padx=10)
 
 root.mainloop()
 
-# this is a comment
