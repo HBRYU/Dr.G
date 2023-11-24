@@ -68,7 +68,7 @@ entry_padding_label = tk.Label(bg='white')
 entry_padding_label.place(x=0, y=size_y*0.9, width=entry_pad, height=size_y*0.1)
 
 #  Create send button
-send_button_image = pi(file='images/new send icon.png')
+send_button_image = pi(file='images/send icon white.png')
 
 send_button = tk.Button(root, image=send_button_image, bg='white', relief='flat', borderwidth=0, highlightthickness=0, command=send_text)
 send_button.place(x=size_x * 0.9, y=size_y * 0.9, width=size_x * 0.1, height=size_y * 0.1)
