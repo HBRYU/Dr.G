@@ -55,6 +55,29 @@ top_label = tk.Label(root, text="Dr.G 도우미 상담",
 
 top_label.place(x=0, y=0, width=size_x, height=size_y/10)
 
+# number of spaces for padding entry text
+space_pad = 2
+
+#hint the text
+def on_entry_click(event):
+    """Function to handle the click event on the entry widget."""
+    if entry.get() == '  메세지를 입력하세요':
+        entry.delete(0, tk.END)
+        entry.config(fg='black')  # Change text color to black when user starts typing
+
+def on_focusout(event):
+    """Function to handle focus out event on the entry widget."""
+    if entry.get() == '  ':
+        entry.insert(0, '  메세지를 입력하세요')
+        entry.config(fg='grey')  # Change text color to grey as a hint
+
+
+# Create an entry widget
+entry = tk.Entry(root, fg='grey',bg='white')  # Set default text color to grey
+entry.insert(0, '  메세지를 입력하세요')  # Default or hint text
+entry.bind('<FocusIn>', on_entry_click)  # Bind click event
+entry.bind('<FocusOut>', on_focusout)  # Bind focus out event
+entry.place(x=0, y=size_y*0.9, width=size_x, height=size_y*0.1)
 
 
 root.mainloop()
