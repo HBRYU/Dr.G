@@ -1,11 +1,5 @@
 import tkinter as tk
 import tkinter.font as tkFont
-import os
-
-try:
-    import tkmacosx as tkm
-except:
-    os.system('pip install tkmacosx')
 
 
 
@@ -92,7 +86,7 @@ entry_pad = 10
 
 
 # Create an entry widget
-entry = tk.Entry(root, fg='grey', bg='white', borderwidth=0)  # Set default text color to grey
+entry = tk.Entry(root, fg='grey', bg='white', borderwidth=0, highlightthickness=0)  # Set default text color to grey
 entry.insert(0, '메세지를 입력하세요')  # Default or hint text
 entry.bind('<FocusIn>', on_entry_click)  # Bind click event
 entry.bind('<FocusOut>', on_focusout)  # Bind focus out event
@@ -104,7 +98,7 @@ entry_padding_label.place(x=0, y=size_y*0.9, width=entry_pad, height=size_y*0.1)
 #  Create send button
 send_button_image = pi(file='images/send icon small.png')
 
-send_button = tkm.Button(root, image=send_button_image, bg='white', relief='flat', borderwidth=0, command=send_text)
+send_button = tk.Button(root, image=send_button_image, bg='white', relief='flat', borderwidth=0, highlightthickness=0, command=send_text)
 send_button.place(x=size_x * 0.9, y=size_y * 0.9, width=size_x * 0.1, height=size_y * 0.1)
 
 
