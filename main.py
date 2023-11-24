@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.font as tkFont
 
 # pi = tk.PhotoImage
 #
@@ -29,9 +30,12 @@ import tkinter as tk
 pi = tk.PhotoImage
 
 root = tk.Tk()
-root.geometry("720x1280")
+root.geometry("420x720")
+root.resizable(False, False)
 
-size_x, size_y = (720, 1280)
+gothic_italic_font = tkFont.Font(family="맑은 고딕", size=20, slant="italic")
+
+size_x, size_y = (420, 720)
 
 
 class text_bubble:
@@ -44,10 +48,15 @@ class text_bubble:
 
 
 top_label = tk.Label(root, text="Dr.G 도우미 상담",
-                     font="Ariel"
-                     bg.)
+                     font=gothic_italic_font,
+                     bg="grey",
+                     fg="white"
+)
+
+top_label.place(x=0, y=0, width=size_x, height=size_y/10)
 
 
 
+root.mainloop()
 
 
