@@ -1,34 +1,6 @@
 import tkinter as tk
 import tkinter.font as tkFont
 
-
-
-# pi = tk.PhotoImage
-#
-# root = tk.Tk()
-# root.geometry("300x200")
-#
-# # Frame for pack
-# pack_frame = tk.Frame(root)
-# pack_frame.pack(side="top", fill="both", expand=True)
-#
-# button1 = tk.Button(pack_frame, text="Packed Button", width=20)
-# button1.pack(pady=10)
-#
-# # Frame for grid
-# grid_frame = tk.Frame(root)
-# grid_frame.pack(side="top", fill="both", expand=True)
-#
-# entry = tk.Entry(grid_frame, width=20)
-# entry.grid(row=0, column=0, padx=10, pady=10)
-#
-# button2 = tk.Button(grid_frame, text="Grid Button")
-# button2.grid(row=0, column=1, padx=10)
-#
-# root.mainloop()
-#
-# # this is a comment
-
 pi = tk.PhotoImage
 
 root = tk.Tk()
@@ -96,7 +68,7 @@ entry_padding_label = tk.Label(bg='white')
 entry_padding_label.place(x=0, y=size_y*0.9, width=entry_pad, height=size_y*0.1)
 
 #  Create send button
-send_button_image = pi(file='images/send icon small.png')
+send_button_image = pi(file='images/new send icon.png')
 
 send_button = tk.Button(root, image=send_button_image, bg='white', relief='flat', borderwidth=0, highlightthickness=0, command=send_text)
 send_button.place(x=size_x * 0.9, y=size_y * 0.9, width=size_x * 0.1, height=size_y * 0.1)
