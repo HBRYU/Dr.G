@@ -1,6 +1,13 @@
 import tkinter as tk
 import tkinter.font as tkFont
 
+try:
+    from pynput import mouse
+except:
+    import os
+    os.system("pip install pynput")
+
+
 pi = tk.PhotoImage
 
 root = tk.Tk()
@@ -13,7 +20,7 @@ root.resizable(False, False)
 size_x, size_y = (420, 720)
 
 gothic_italic_font = tkFont.Font(family="맑은 고딕", size=18, slant="italic")
-gothic_regular_font = tkFont.Font(family="맑은 고딕", size=15)
+gothic_regular_font = tkFont.Font(family="맑은 고딕", size=11)
 
 # number of pixels for padding entry text
 entry_pad = 10
@@ -22,7 +29,17 @@ entry_height = size_y*0.1
 
 ###############################################################
 
+# ----- Mouse input handling----
+# scroll_y = 0
+def on_scroll(x, y, dx, dy):
+    # scroll_y += dy
+    print(dy)
 
+# Create and start the listener
+listener = mouse.Listener(on_scroll=on_scroll)
+listener.start()
+
+###############################################################
 
 class text_bubble:
     # Constructor
@@ -30,15 +47,45 @@ class text_bubble:
         # Attributes
         self.text = text
         self.is_bot = is_bot
+        self.text_slices = self.get_text_slices()
+        print(self.text_slices)
         self.bubble_width, self.bubble_height = self.calc_bubble_dimensions()
         self.x, self.y = self.calc_bubble_position()
-        print(self.bubble_width, self.bubble_height)
+        # print(self.bubble_width, self.bubble_height, self.x, self.y)
 
     # Method
+    def get_text_slices(self):
+        # Length of "AAAAAAAAAAAAAAAAAAAA"
+        linebreak = gothic_regular_font.measure("A" * 20)
+        text_length = len(self.text)
+        text_slices = []
+
+        # for i in range(0, text_length - 1, linebreak):
+        #     text_slices.append(self.text[i:i + linebreak if i + linebreak <= text_length - 1 else text_length - 1])
+
+        current_slice_index = 0
+        last_space_index = 0
+        for i in range(0, text_length):
+            if self.text[i] == " ":
+                last_space_index = i
+
+            if gothic_regular_font.measure(self.text[current_slice_index:i]) > linebreak:
+                if current_slice_index < last_space_index:
+                    text_slices.append(self.text[current_slice_index:last_space_index])
+                    current_slice_index = last_space_index + 1
+                else:
+                    text_slices.append(self.text[current_slice_index:i])
+                    current_slice_index = i
+
+            if i == text_length - 1:
+                text_slices.append(self.text[current_slice_index:i+1])
+        return text_slices
+
     def calc_bubble_dimensions(self):
-        text_width = gothic_regular_font.measure(self.text)
-        text_height = gothic_regular_font.metrics("linespace")
-        vertical_pad, horizontal_pad = 16, 18
+
+        text_width = max([gothic_regular_font.measure(this_slice) for this_slice in self.text_slices])
+        text_height = gothic_regular_font.metrics("linespace") * len(self.text_slices)
+        vertical_pad, horizontal_pad = 10, 18
         bubble_width = text_width + horizontal_pad*2
         bubble_height = text_height + vertical_pad*2
 
@@ -46,15 +93,62 @@ class text_bubble:
 
     def calc_bubble_position(self):
         base_x = 62 if self.is_bot else size_x - self.bubble_width - 20
-        base_y = entry_height + 31 + self.bubble_height
+        base_y = size_y - (entry_height + 20 + self.bubble_height)
         return (base_x, base_y)
 
     def render_bubble(self):
-        bubble_label = tk.Label(text=self.text, width=self.bubble_width, height=self.bubble_height,
-                                fg="black" if self.is_bot else "white",
-                                bg="white" if self.is_bot else "black",
-                                font=gothic_regular_font)
-        bubble_label.place(x=self.x, y=self.y)
+
+        fg = "black" if self.is_bot else "white"
+        bg = "white" if self.is_bot else "black"
+
+        bubble_frame = tk.Frame(root,
+                                width=self.bubble_width,
+                                height=self.bubble_height,
+                                bg=bg)
+        bubble_frame.place(x=self.x, y=self.y)
+
+        bubble_text = "\n".join(self.text_slices)
+        # print(bubble_text)
+
+        bubble_label = tk.Label(bubble_frame,
+                                text=bubble_text,
+                                fg=fg,
+                                bg=bg,
+                                font=gothic_regular_font,
+                                anchor="w",
+                                justify="left")
+        bubble_label.place(x=12, y=5)  # manual magic number
+
+        return bubble_frame
+
+class chat:
+    def __init__(self):
+        self.bubbles = []
+        self.bubble_frames = []
+
+    def add_bubble(self, new_bubble):
+        self.bubbles.insert(0, new_bubble)
+
+        scroll_y = 0
+        prev_y = 0
+        y_gap = 16
+        for i, bubble in enumerate(self.bubbles):
+            bubble.y = size_y - (entry_height + 20 + bubble.bubble_height) if i == 0 \
+                else prev_y - bubble.bubble_height - (y_gap if i != 0 else 0)
+
+            bubble.y += scroll_y
+
+            prev_y = bubble.y
+
+    def render_chat(self):
+        for frame in self.bubble_frames:
+            frame.destroy()
+        for bubble in self.bubbles:
+            this_frame = bubble.render_bubble()
+            self.bubble_frames.append(this_frame)
+
+main_chat = chat()
+
 
 #hint the text
 def on_entry_click(event):
@@ -72,10 +166,10 @@ def on_focusout(event):
 
 def send_text():
     text = entry.get()
+    entry.delete(0, tk.END)
     new_text_bubble = text_bubble(text, False)
-
-    new_text_bubble.render_bubble()
-
+    main_chat.add_bubble(new_text_bubble)
+    main_chat.render_chat()
 
 
 top_label = tk.Label(root, text="Dr.G 도우미 상담",
