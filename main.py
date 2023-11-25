@@ -29,17 +29,6 @@ entry_height = size_y*0.1
 
 ###############################################################
 
-# ----- Mouse input handling----
-# scroll_y = 0
-def on_scroll(x, y, dx, dy):
-    # scroll_y += dy
-    print(dy)
-
-# Create and start the listener
-listener = mouse.Listener(on_scroll=on_scroll)
-listener.start()
-
-###############################################################
 
 class text_bubble:
     # Constructor
@@ -48,10 +37,10 @@ class text_bubble:
         self.text = text
         self.is_bot = is_bot
         self.text_slices = self.get_text_slices()
-        print(self.text_slices)
+        # print(self.text_slices)
         self.bubble_width, self.bubble_height = self.calc_bubble_dimensions()
         self.x, self.y = self.calc_bubble_position()
-        # print(self.bubble_width, self.bubble_height, self.x, self.y)
+        # # print(self.bubble_width, self.bubble_height, self.x, self.y)
 
     # Method
     def get_text_slices(self):
@@ -108,7 +97,7 @@ class text_bubble:
         bubble_frame.place(x=self.x, y=self.y)
 
         bubble_text = "\n".join(self.text_slices)
-        # print(bubble_text)
+        # # print(bubble_text)
 
         bubble_label = tk.Label(bubble_frame,
                                 text=bubble_text,
@@ -125,18 +114,16 @@ class chat:
     def __init__(self):
         self.bubbles = []
         self.bubble_frames = []
+        self.scroll_y = 0
 
     def add_bubble(self, new_bubble):
         self.bubbles.insert(0, new_bubble)
 
-        scroll_y = 0
         prev_y = 0
         y_gap = 16
         for i, bubble in enumerate(self.bubbles):
             bubble.y = size_y - (entry_height + 20 + bubble.bubble_height) if i == 0 \
                 else prev_y - bubble.bubble_height - (y_gap if i != 0 else 0)
-
-            bubble.y += scroll_y
 
             prev_y = bubble.y
 
@@ -146,6 +133,25 @@ class chat:
         for bubble in self.bubbles:
             this_frame = bubble.render_bubble()
             self.bubble_frames.append(this_frame)
+
+    def scroll(self, dy):
+        speed = 10
+
+        y_list = [bubble.y for bubble in self.bubbles]
+        min_index = y_list.index(min(y_list))
+        max_index = y_list.index(max(y_list))
+
+        # Condition 1
+        if y_list[min_index] <= 100 and dy < 0:
+            return
+
+        # Condition 2
+        if y_list[max_index] >= size_y - entry_height - 20 - self.bubbles[max_index].bubble_height and dy > 0:
+            return
+
+        for bubble in self.bubbles:
+            bubble.y += dy * speed
+        # print("Chat scrolled by", dy)
 
 main_chat = chat()
 
@@ -196,7 +202,28 @@ send_button_image = pi(file='images/send icon white.png')
 send_button = tk.Button(root, image=send_button_image, bg='white', relief='flat', borderwidth=0, highlightthickness=0, command=send_text)
 send_button.place(x=size_x * 0.9, y=size_y * 0.9, width=size_x * 0.1, height=entry_height)
 
+###############################################################
+# ----- Mouse input handling----
+# scroll_y = 0
+def on_scroll(x, y, dx, dy):
+    # scroll_y += dy
+    # print(dy)
+    main_chat.scroll(dy)
 
+# Create and start the listener
+listener = mouse.Listener(on_scroll=on_scroll)
+listener.start()
+
+###############################################################
+# ----- Custom Update Function -----
+
+def update():
+    main_chat.render_chat()
+    # print("update call")
+    root.after(50, update)
+
+
+update()
 root.mainloop()
 
 
