@@ -1,6 +1,14 @@
 # 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
+try:
+    from openai import OpenAI
 
-from openai import OpenAI
+except:
+    import os
+    os.system("pip install openai")
+    from openai import OpenAI
+
+
+
 
 client = OpenAI(
     # defaults to os.environ.get("OPENAI_API_KEY")

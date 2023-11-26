@@ -14,7 +14,7 @@ pi = tk.PhotoImage
 
 root = tk.Tk()
 root.geometry("420x720")
-root.configure(bg='#FFFFFF')
+root.configure(bg='#F2F2F2')
 root.resizable(False, False)
 
 ###############################################################
@@ -29,7 +29,7 @@ gothic_regular_font = tkFont.Font(family="맑은 고딕", size=11)
 white = '#FFFFFF'
 black = '#373737'
 grey = '#737376'
-bot_color ='#F2F2F2'
+bot_color ='#FFFFFF'
 
 # number of pixels for padding entry text
 entry_pad = 10
@@ -274,7 +274,7 @@ def add_loading_indicator():
 def send_gpt_message():
     main_chat.add_bubble(text_bubble(bot.send_text_gpt(gpt_message), True))
 
-top_label = tk.Label(root, text="              Dr.G 도우미 상담",
+top_label = tk.Label(root, text="    💬  Dr.G 도우미 상담",
                      font=gothic_bold_font,
                      bg=black,
                      fg=white,
@@ -283,10 +283,6 @@ top_label = tk.Label(root, text="              Dr.G 도우미 상담",
 )
 
 top_label.place(x=0, y=0, width=size_x, height=size_y/10)
-
-avatar_image = pi(file='images/avatar.png')
-top_label_image = tk.Label(root, image=avatar_image, borderwidth=0, highlightthickness=0)
-top_label_image.place(x=10, y=10)
 
 # Create an entry widget
 entry = tk.Entry(root, fg=grey, bg=white, borderwidth=0, highlightthickness=0, font=gothic_regular_font)  # Set default text color to grey
@@ -329,7 +325,6 @@ def update():
     main_chat.render_chat()
     # print("update call")
     top_label.lift()
-    top_label_image.lift()
     entry.lift()
     send_button.lift()
     entry_padding_label.lift()
