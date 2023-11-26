@@ -6,6 +6,9 @@ try:
 except:
     import os
     os.system("pip install pynput")
+    from pynput import mouse
+
+import bot
 
 pi = tk.PhotoImage
 
@@ -144,32 +147,31 @@ class chat:
     def scroll(self, dy):
         speed = 10
 
+        # Don't scroll if there are no bubbles
         if len(self.bubbles) == 0:
             return
 
+        # Get list of y position values for each bubble to prevent scrolling past upper/lower border
         y_list = [bubble.y for bubble in self.bubbles]
-        min_index = y_list.index(min(y_list))
+        # min_index = y_list.index(min(y_list))
         max_index = y_list.index(max(y_list))
 
-        print(dy)
-
-        # Condition 1
+        # Condition 1 : Upper border
         if (min(y_list) <= 100) and (dy < 0):
             return
 
-        # Condition 2
+        # Condition 2 : Lower border
         if max(y_list) >= size_y - entry_height - 20 - self.bubbles[max_index].bubble_height and dy > 0:
-            # ???
             return
 
         for bubble in self.bubbles:
             bubble.y += dy * speed
 
         ##########################################################
-        # Scroll past border prevention
+        # Scroll past border correction
 
         y_list = [bubble.y for bubble in self.bubbles]
-        min_index = y_list.index(min(y_list))
+        # min_index = y_list.index(min(y_list))
         max_index = y_list.index(max(y_list))
 
         # Condition 1 : Upper border
@@ -188,7 +190,7 @@ class chat:
 main_chat = chat()
 
 
-#hint the text
+# hint the text
 def on_entry_click(event):
     """Function to handle the click event on the entry widget."""
     if entry.get() == '메세지를 입력하세요':
