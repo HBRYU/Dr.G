@@ -51,6 +51,7 @@ class text_bubble:
         self.x, self.y = self.calc_bubble_position()
         # # print(self.bubble_width, self.bubble_height, self.x, self.y)
 
+
     # Method
     def get_text_slices(self):
         # Length of "AAAAAAAAAAAAAAAAAAAA"
@@ -95,6 +96,7 @@ class text_bubble:
         base_y = size_y - (entry_height + 20 + self.bubble_height)
         return (base_x, base_y)
 
+
     def render_bubble(self):
 
         fg = black if self.is_bot else white
@@ -117,6 +119,10 @@ class text_bubble:
                                 anchor="w",
                                 justify="left")
         bubble_label.place(x=14, y=5)  # manual magic number
+
+        avatar_image = pi(file='images/avatar icon1.png')
+        avatar_icon = tk.Label(root, image=avatar_image, borderwidth=0, highlightthickness=0)
+        avatar_icon.place(x=base_x, y=base_y)
 
         return bubble_frame
 
