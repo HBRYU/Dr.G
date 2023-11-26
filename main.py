@@ -7,11 +7,11 @@ except:
     import os
     os.system("pip install pynput")
 
-
 pi = tk.PhotoImage
 
 root = tk.Tk()
 root.geometry("420x720")
+root.configure(bg='#FFFFFF')
 root.resizable(False, False)
 
 ###############################################################
@@ -21,6 +21,11 @@ size_x, size_y = (420, 720)
 
 gothic_italic_font = tkFont.Font(family="맑은 고딕", size=18, slant="italic")
 gothic_regular_font = tkFont.Font(family="맑은 고딕", size=11)
+
+white = '#FFFFFF'
+black = '#373737'
+grey = '#737376'
+bot_color ='#F2F2F2'
 
 # number of pixels for padding entry text
 entry_pad = 10
@@ -45,7 +50,7 @@ class text_bubble:
     # Method
     def get_text_slices(self):
         # Length of "AAAAAAAAAAAAAAAAAAAA"
-        linebreak = gothic_regular_font.measure("A" * 20)
+        linebreak = gothic_regular_font.measure("A" * 30)
         text_length = len(self.text)
         text_slices = []
 
@@ -87,8 +92,8 @@ class text_bubble:
 
     def render_bubble(self):
 
-        fg = "black" if self.is_bot else "white"
-        bg = "white" if self.is_bot else "black"
+        fg = black if self.is_bot else white
+        bg = bot_color if self.is_bot else black
 
         bubble_frame = tk.Frame(root,
                                 width=self.bubble_width,
@@ -106,7 +111,7 @@ class text_bubble:
                                 font=gothic_regular_font,
                                 anchor="w",
                                 justify="left")
-        bubble_label.place(x=12, y=5)  # manual magic number
+        bubble_label.place(x=14, y=5)  # manual magic number
 
         return bubble_frame
 
@@ -161,14 +166,14 @@ def on_entry_click(event):
     """Function to handle the click event on the entry widget."""
     if entry.get() == '메세지를 입력하세요':
         entry.delete(0, tk.END)
-        entry.config(fg='black')  # Change text color to black when user starts typing
+        entry.config(fg=black)  # Change text color to black when user starts typing
         entry.insert(0, '')
 
 def on_focusout(event):
     """Function to handle focus out event on the entry widget."""
     if entry.get() == '':
         entry.insert(0, '메세지를 입력하세요')
-        entry.config(fg='grey')  # Change text color to grey as a hint
+        entry.config(fg=grey)  # Change text color to grey as a hint
 
 def send_text():
     text = entry.get()
@@ -180,26 +185,26 @@ def send_text():
 
 top_label = tk.Label(root, text="Dr.G 도우미 상담",
                      font=gothic_italic_font,
-                     bg="grey",
-                     fg="white"
+                     bg=grey,
+                     fg=white
 )
 
 top_label.place(x=0, y=0, width=size_x, height=size_y/10)
 
 # Create an entry widget
-entry = tk.Entry(root, fg='grey', bg='white', borderwidth=0, highlightthickness=0)  # Set default text color to grey
+entry = tk.Entry(root, fg=grey, bg=white, borderwidth=0, highlightthickness=0)  # Set default text color to grey
 entry.insert(0, '메세지를 입력하세요')  # Default or hint text
 entry.bind('<FocusIn>', on_entry_click)  # Bind click event
 entry.bind('<FocusOut>', on_focusout)  # Bind focus out event
 entry.place(x=entry_pad, y=size_y*0.9, width=size_x - entry_pad, height=entry_height)
 
-entry_padding_label = tk.Label(bg='white')
+entry_padding_label = tk.Label(bg=white)
 entry_padding_label.place(x=0, y=size_y*0.9, width=entry_pad, height=entry_height)
 
 #  Create send button
 send_button_image = pi(file='images/send icon white.png')
 
-send_button = tk.Button(root, image=send_button_image, bg='white', relief='flat', borderwidth=0, highlightthickness=0, command=send_text)
+send_button = tk.Button(root, image=send_button_image, bg=white, relief='flat', borderwidth=0, highlightthickness=0, command=send_text)
 send_button.place(x=size_x * 0.9, y=size_y * 0.9, width=size_x * 0.1, height=entry_height)
 
 ###############################################################
