@@ -70,26 +70,10 @@ def get_response(user_prompt, knowledge):
 
     response = ask_GPT(generated_prompt)
 
-    # Failsafe ###########################################################
-    # attempts = 1
-    # # This works assuming that { and } is only included at the summary block
-    # while ("{" not in response or "}" not in response) and attempts < 3:
-    #     print("Error: Summary block not returned. Re-prompting...")
-    #     response = ask_GPT(generate_prompt(user_prompt))
-    #     attempts += 1
-    #
-    # if attempts == 3:
-    #     print("ERROR: Summary not included")
-    ######################################################################
-
-    # print("Response: " + response)
-
     summary_prompt = generated_prompt + "\nResponse: " + response + "\n\nSummarize this interaction within 100 words."
 
     core_memory = ask_GPT(summary_prompt)
 
     print("Saved memory: " + core_memory)
-
-    # This works assuming that [ is only included at the summary block
 
     return response

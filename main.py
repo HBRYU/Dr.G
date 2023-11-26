@@ -242,11 +242,17 @@ def on_focusout(event):
         entry.insert(0, '메세지를 입력하세요')
         entry.config(fg=grey)  # Change text color to grey as a hint
 
+def on_return(event):
+    send_text()
 
 gpt_message = ""
 def send_text():
     global gpt_message
     text = entry.get()
+
+    if text == '':
+        return
+
     entry.delete(0, tk.END)
     new_text_bubble = text_bubble(text, False)
     main_chat.add_bubble(new_text_bubble)
@@ -283,10 +289,11 @@ top_label_image = tk.Label(root, image=avatar_image, borderwidth=0, highlightthi
 top_label_image.place(x=10, y=10)
 
 # Create an entry widget
-entry = tk.Entry(root, fg=grey, bg=white, borderwidth=0, highlightthickness=0)  # Set default text color to grey
+entry = tk.Entry(root, fg=grey, bg=white, borderwidth=0, highlightthickness=0, font=gothic_regular_font)  # Set default text color to grey
 entry.insert(0, '메세지를 입력하세요')  # Default or hint text
 entry.bind('<FocusIn>', on_entry_click)  # Bind click event
 entry.bind('<FocusOut>', on_focusout)  # Bind focus out event
+entry.bind('<Return>', on_return)
 entry.place(x=entry_pad, y=size_y*0.9, width=size_x - entry_pad - size_x * 0.1, height=entry_height)
 
 entry_padding_label = tk.Label(bg=white)
