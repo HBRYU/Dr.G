@@ -19,7 +19,8 @@ root.resizable(False, False)
 
 size_x, size_y = (420, 720)
 
-gothic_italic_font = tkFont.Font(family="맑은 고딕", size=18, slant="italic")
+# gothic_italic_font = tkFont.Font(family="맑은 고딕", size=18, slant="italic")
+gothic_bold_font = tkFont.Font(family="맑은 고딕", size=18, weight="bold")
 gothic_regular_font = tkFont.Font(family="맑은 고딕", size=11)
 
 white = '#FFFFFF'
@@ -208,14 +209,19 @@ def send_text():
     main_chat.add_bubble(new_text_bubble)
     main_chat.render_chat()
 
-
-top_label = tk.Label(root, text="Dr.G 도우미 상담",
-                     font=gothic_italic_font,
-                     bg=grey,
-                     fg=white
+top_label = tk.Label(root, text="              Dr.G 도우미 상담",
+                     font=gothic_bold_font,
+                     bg=black,
+                     fg=white,
+                     anchor="w",
+                     justify='left'
 )
 
 top_label.place(x=0, y=0, width=size_x, height=size_y/10)
+
+avatar_image = pi(file='images/avatar.png')
+top_label_image = tk.Label(root, image=avatar_image, borderwidth=0, highlightthickness=0)
+top_label_image.place(x=10, y=10)
 
 # Create an entry widget
 entry = tk.Entry(root, fg=grey, bg=white, borderwidth=0, highlightthickness=0)  # Set default text color to grey
