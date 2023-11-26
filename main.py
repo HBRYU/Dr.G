@@ -187,12 +187,18 @@ class chat:
         # min_index = y_list.index(min(y_list))
         max_index = y_list.index(max(y_list))
 
+        # Check if text bubbles span out of screen
+        scrollable = True if max(y_list) > size_y - entry_height - 20 - self.bubbles[max_index].bubble_height or min(y_list) <= 100 else False
+
+        if not scrollable:
+            return
+
         # Condition 1 : Upper border
-        if (min(y_list) <= 100) and (dy < 0):
+        if (min(y_list) > 100) and (dy > 0):
             return
 
         # Condition 2 : Lower border
-        if max(y_list) >= size_y - entry_height - 20 - self.bubbles[max_index].bubble_height and dy > 0:
+        if max(y_list) < size_y - entry_height - 20 - self.bubbles[max_index].bubble_height and dy < 0:
             return
 
         for bubble in self.bubbles:
@@ -200,22 +206,23 @@ class chat:
 
         ##########################################################
         # Scroll past border correction
-
+        #
         y_list = [bubble.y for bubble in self.bubbles]
         # min_index = y_list.index(min(y_list))
         max_index = y_list.index(max(y_list))
 
         # Condition 1 : Upper border
-        y_offset = 100 - min(y_list)
-        if y_offset > 0:
+        y_offset1 = 100 - min(y_list)
+        y_offset2 = max(y_list) - (size_y - entry_height - 20 - self.bubbles[max_index].bubble_height)
+        if y_offset1 < 0:
             for bubble in self.bubbles:
-                bubble.y += y_offset
+                bubble.y += y_offset1
 
         # Condition 2 : Lower border
-        y_offset = max(y_list) - (size_y - entry_height - 20 - self.bubbles[max_index].bubble_height)
-        if y_offset > 0:
+
+        if y_offset2 < 0:
             for bubble in self.bubbles:
-                bubble.y -= y_offset
+                bubble.y -= y_offset2
         ##########################################################
 
 main_chat = chat()
@@ -265,7 +272,7 @@ entry = tk.Entry(root, fg=grey, bg=white, borderwidth=0, highlightthickness=0)  
 entry.insert(0, '메세지를 입력하세요')  # Default or hint text
 entry.bind('<FocusIn>', on_entry_click)  # Bind click event
 entry.bind('<FocusOut>', on_focusout)  # Bind focus out event
-entry.place(x=entry_pad, y=size_y*0.9, width=size_x - entry_pad, height=entry_height)
+entry.place(x=entry_pad, y=size_y*0.9, width=size_x - entry_pad - size_x * 0.1, height=entry_height)
 
 entry_padding_label = tk.Label(bg=white)
 entry_padding_label.place(x=0, y=size_y*0.9, width=entry_pad, height=entry_height)
@@ -299,7 +306,11 @@ listener.start()
 def update():
     main_chat.render_chat()
     # print("update call")
-
+    top_label.lift()
+    top_label_image.lift()
+    entry.lift()
+    send_button.lift()
+    entry_padding_label.lift()
 
     root.after(50, update)
 
