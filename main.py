@@ -42,7 +42,7 @@ class text_bubble:
         self.text = text
         self.is_bot = is_bot
         self.text_slices = self.get_text_slices()
-        # print(self.text_slices)
+        print(self.text_slices)
         self.bubble_width, self.bubble_height = self.calc_bubble_dimensions()
         self.x, self.y = self.calc_bubble_position()
         # # print(self.bubble_width, self.bubble_height, self.x, self.y)
@@ -78,7 +78,8 @@ class text_bubble:
     def calc_bubble_dimensions(self):
 
         text_width = max([gothic_regular_font.measure(this_slice) for this_slice in self.text_slices])
-        text_height = gothic_regular_font.metrics("linespace") * len(self.text_slices)
+        text_height = gothic_regular_font.metrics("linespace") \
+                      * (len(self.text_slices) + sum([s.count('\n') for s in self.text_slices]))
         vertical_pad, horizontal_pad = 10, 18
         bubble_width = text_width + horizontal_pad*2
         bubble_height = text_height + vertical_pad*2
@@ -142,21 +143,50 @@ class chat:
     def scroll(self, dy):
         speed = 10
 
+        if len(self.bubbles) == 0:
+            return
+
         y_list = [bubble.y for bubble in self.bubbles]
         min_index = y_list.index(min(y_list))
         max_index = y_list.index(max(y_list))
 
+        print(dy)
+
         # Condition 1
-        if y_list[min_index] <= 100 and dy < 0:
+        if (min(y_list) <= 100) and (dy < 0):
+            # 1
+            # self.bubbles[min_index].y = 100
+            # 2
+            # self.bubbles[min_index].y = min(y_list)
+            # 3
+            # y_offset = 100 - min(y_list)
+            # for bubble in self.bubbles:
+            #     bubble.y += y_offset
+
             return
 
         # Condition 2
-        if y_list[max_index] >= size_y - entry_height - 20 - self.bubbles[max_index].bubble_height and dy > 0:
+        if max(y_list) >= size_y - entry_height - 20 - self.bubbles[max_index].bubble_height and dy > 0:
+            # ???
             return
 
         for bubble in self.bubbles:
             bubble.y += dy * speed
-        # print("Chat scrolled by", dy)
+
+        ##########################################################
+        # Scroll past border prevention
+        # Condition 1 : Upper border
+        y_offset = 100 - min(y_list)
+        if y_offset > 0:
+            for bubble in self.bubbles:
+                bubble.y += y_offset
+
+        # Condition 2 : Lower border
+        y_offset = max(y_list) - (size_y - entry_height - 20 - self.bubbles[max_index].bubble_height)
+        if y_offset > 0:
+            for bubble in self.bubbles:
+                bubble.y -= y_offset
+        ##########################################################
 
 main_chat = chat()
 
@@ -225,6 +255,8 @@ listener.start()
 def update():
     main_chat.render_chat()
     # print("update call")
+
+
     root.after(50, update)
 
 
