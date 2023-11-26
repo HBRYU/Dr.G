@@ -154,15 +154,6 @@ class chat:
 
         # Condition 1
         if (min(y_list) <= 100) and (dy < 0):
-            # 1
-            # self.bubbles[min_index].y = 100
-            # 2
-            # self.bubbles[min_index].y = min(y_list)
-            # 3
-            # y_offset = 100 - min(y_list)
-            # for bubble in self.bubbles:
-            #     bubble.y += y_offset
-
             return
 
         # Condition 2
@@ -175,6 +166,11 @@ class chat:
 
         ##########################################################
         # Scroll past border prevention
+
+        y_list = [bubble.y for bubble in self.bubbles]
+        min_index = y_list.index(min(y_list))
+        max_index = y_list.index(max(y_list))
+
         # Condition 1 : Upper border
         y_offset = 100 - min(y_list)
         if y_offset > 0:
