@@ -9,17 +9,11 @@ client = OpenAI(
 
 core_memory = ""
 
-def get_prompt(user_prompt):
+def generate_prompt(user_prompt):
     global core_memory
 
     prompt = "[Previous interaction summary] {" + core_memory + "}\n"
-    prompt += "[Prompt. You must answer this] " + user_prompt + "\n"
-    prompt += "[Summarize] After answering the prompt, you must summarize this interaction along with the previous summary within 100 words " \
-              "total. You must contain this summary inside the summary block: [Summary]{*here}. This is to preserve " \
-              "memory.\n"
-    prompt += "[Example] User: Hi! / GPT: Hello! How can I assist you?\n[Summary]{Basic greetings from user.}" + "\n"
-    prompt += "[Language] If the user asks in Korean, you must answer + summarize in Korean. Likewise for English. " \
-              "But keep [Tags] in English for consistency.\n"
+    prompt += "[Prompt. You must answer this] " + user_prompt
 
     return prompt
 
@@ -47,18 +41,17 @@ def main():
         if user_prompt == "exit":
             break
 
-        response = ask_GPT(get_prompt(user_prompt))
-
+        response = ask_GPT(generate_prompt(user_prompt))
 
         # Failsafe ###########################################################
-        attempts = 1
-        while ("{" not in response or "}" not in response) and attempts < 3:
-            print("Error: Summary block not returned. Re-prompting...")
-            response = ask_GPT(get_prompt(user_prompt))
-            attempts += 1
-
-        if attempts == 3:
-            print("ERROR: Summary not included")
+        # attempts = 1
+        # while ("{" not in response or "}" not in response) and attempts < 3:
+        #     print("Error: Summary block not returned. Re-prompting...")
+        #     response = ask_GPT(generate_prompt(user_prompt))
+        #     attempts += 1
+        #
+        # if attempts == 3:
+        #     print("ERROR: Summary not included")
         ######################################################################
 
         print("Response: " + response)
@@ -72,26 +65,30 @@ def main():
 def get_response(user_prompt):
     global core_memory
 
-    response = ask_GPT(get_prompt(user_prompt))
+    generated_prompt = generate_prompt(user_prompt)
+
+    response = ask_GPT(generated_prompt)
 
     # Failsafe ###########################################################
-    attempts = 1
-    # This works assuming that { and } is only included at the summary block
-    while ("{" not in response or "}" not in response) and attempts < 3:
-        print("Error: Summary block not returned. Re-prompting...")
-        response = ask_GPT(get_prompt(user_prompt))
-        attempts += 1
-
-    if attempts == 3:
-        print("ERROR: Summary not included")
+    # attempts = 1
+    # # This works assuming that { and } is only included at the summary block
+    # while ("{" not in response or "}" not in response) and attempts < 3:
+    #     print("Error: Summary block not returned. Re-prompting...")
+    #     response = ask_GPT(generate_prompt(user_prompt))
+    #     attempts += 1
+    #
+    # if attempts == 3:
+    #     print("ERROR: Summary not included")
     ######################################################################
 
     # print("Response: " + response)
 
-    core_memory = response[response.index("{") + 1:response.index("}")]
-    # print("Saved memory: " + core_memory)
+    summary_prompt = generated_prompt + "\nResponse: " + response + "\n\nSummarize this interaction within 100 words."
+
+    core_memory = ask_GPT(summary_prompt)
+
+    print("Saved memory: " + core_memory)
 
     # This works assuming that [ is only included at the summary block
-    pure_response = response[:response.index("[")]
 
-    return pure_response
+    return response

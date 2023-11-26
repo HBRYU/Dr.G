@@ -211,6 +211,10 @@ def send_text():
     main_chat.add_bubble(new_text_bubble)
     main_chat.render_chat()
 
+    main_chat.add_bubble(text_bubble(bot.send_text(text), True))
+    main_chat.render_chat()
+
+
 top_label = tk.Label(root, text="              Dr.G 도우미 상담",
                      font=gothic_bold_font,
                      bg=black,

@@ -5,21 +5,39 @@ conversations:
     - Bye! Have a great day.
   - - Bye
     - Bye! Have a great day.
-  - - 안녕히계세요
-    - 안녕히계세요! 도움 드릴 부분이 있다면 언제든지 최선을 다하여 답변하겠습니다.
-  - - 잘 가요
-    - 안녕히계세요! 도움 드릴 부분이 있다면 언제든지 최선을 다하여 답변하겠습니다.
-  - - 다음에 봐요
-    - 다음에 봬요! 도움 드릴 부분이 있다면 언제든지 최선을 다하여 답변하겠습니다.
-  - - 다음에 봬요
-    - 다음에 봬요! 도움 드릴 부분이 있다면 언제든지 최선을 다하여 답변하겠습니다.
-  - - 안녕!
-    - 안녕! 또 만나요.
+  - - Goodbye
+    - Bye! Have a great day.
+  - - goodbye
+    - Bye! Have a great day.
   - - Thanks for your help
-    - You're welcome! I am here to assist you at any time! 
+    - You're welcome! I am here to assist you at any time!
   - - Thank you for your help
-    - You're welcome! I am here to assist you at any time! 
+    - You're welcome! I am here to assist you at any time!
   - - Thanks for your help.
-    - You're welcome! I am here to assist you at any time! 
+    - You're welcome! I am here to assist you at any time!
   - - Thank you for your help.
-    - You're welcome! I am here to assist you at any time! 
+    - You're welcome! I am here to assist you at any time!
+  - - Goodbye
+    - Goodbye, take care!
+  - - See you later
+    - See you later! Have a good one.
+  - - Farewell
+    - Farewell! Hope to see you again soon.
+  - - So long
+    - So long! Wishing you the best.
+  - - I'm off
+    - Take care! Looking forward to our next chat.
+  - - Until next time
+    - Until next time! Stay safe.
+  - - I have to go now
+    - Alright, have a good day! Feel free to return anytime.
+  - - It's time for me to leave
+    - Safe travels! It was nice assisting you.
+  - - I must be going
+    - I understand. Have a great day ahead!
+  - - Catch you later
+    - Sure thing! Catch you later.
+  - - Time to say goodbye
+    - Yes, it seems so. Goodbye and take care!
+  - - Leaving now
+    - Goodbye! Have a great time ahead.
