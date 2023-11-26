@@ -9,10 +9,11 @@ client = OpenAI(
 
 core_memory = ""
 
-def generate_prompt(user_prompt):
+def generate_prompt(user_prompt, knowledge_string):
     global core_memory
 
-    prompt = "[Previous interaction summary] {" + core_memory + "}\n"
+    prompt = "[Here's your background knowledge:]\n" + knowledge_string + "\n"
+    prompt += "[Previous interaction summary] {" + core_memory + "}\n"
     prompt += "[Prompt. You must answer this] " + user_prompt
 
     return prompt
@@ -31,41 +32,41 @@ def ask_GPT(user_prompt):
     return chat_completion.choices[0].message.content
 
 
-def main():
-    # used for testing
-    global core_memory
-
-    while True:
-
-        user_prompt = input("input (type 'exit' to exit): ")
-        if user_prompt == "exit":
-            break
-
-        response = ask_GPT(generate_prompt(user_prompt))
-
-        # Failsafe ###########################################################
-        # attempts = 1
-        # while ("{" not in response or "}" not in response) and attempts < 3:
-        #     print("Error: Summary block not returned. Re-prompting...")
-        #     response = ask_GPT(generate_prompt(user_prompt))
-        #     attempts += 1
-        #
-        # if attempts == 3:
-        #     print("ERROR: Summary not included")
-        ######################################################################
-
-        print("Response: " + response)
-
-        core_memory = response[response.index("{")+1:response.index("}")]
-        print("Saved memory: " + core_memory)
+# def main():
+#     # used for testing
+#     global core_memory
+#
+#     while True:
+#
+#         user_prompt = input("input (type 'exit' to exit): ")
+#         if user_prompt == "exit":
+#             break
+#
+#         response = ask_GPT(generate_prompt(user_prompt))
+#
+#         # Failsafe ###########################################################
+#         # attempts = 1
+#         # while ("{" not in response or "}" not in response) and attempts < 3:
+#         #     print("Error: Summary block not returned. Re-prompting...")
+#         #     response = ask_GPT(generate_prompt(user_prompt))
+#         #     attempts += 1
+#         #
+#         # if attempts == 3:
+#         #     print("ERROR: Summary not included")
+#         ######################################################################
+#
+#         print("Response: " + response)
+#
+#         core_memory = response[response.index("{")+1:response.index("}")]
+#         print("Saved memory: " + core_memory)
 
 
 # main()
 
-def get_response(user_prompt):
+def get_response(user_prompt, knowledge):
     global core_memory
 
-    generated_prompt = generate_prompt(user_prompt)
+    generated_prompt = generate_prompt(user_prompt, knowledge)
 
     response = ask_GPT(generated_prompt)
 

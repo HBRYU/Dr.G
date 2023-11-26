@@ -63,7 +63,9 @@ def send_text(text):
         response = bye['responses'][bye['prompts'].index(text)]
     else:
         #2. Inquire GPT-4
-        response = gptAPI.get_response(text)
+
+        with open('knowledge.txt', 'r', encoding='utf-8') as knowledge:
+            response = gptAPI.get_response(text, knowledge.read())
         response += "\n(GPT-4)"
 
     return response

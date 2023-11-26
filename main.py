@@ -102,29 +102,54 @@ class text_bubble:
         fg = black if self.is_bot else white
         bg = bot_color if self.is_bot else black
 
-        bubble_frame = tk.Frame(root,
-                                width=self.bubble_width,
-                                height=self.bubble_height,
-                                bg=bg)
-        bubble_frame.place(x=self.x, y=self.y)
+        if not self.is_bot:
+            bubble_frame = tk.Frame(root,
+                                    width=self.bubble_width,
+                                    height=self.bubble_height,
+                                    bg=bg)
+            bubble_frame.place(x=self.x, y=self.y)
 
-        bubble_text = "\n".join(self.text_slices)
-        # # print(bubble_text)
+            bubble_text = "\n".join(self.text_slices)
+            # # print(bubble_text)
 
-        bubble_label = tk.Label(bubble_frame,
-                                text=bubble_text,
-                                fg=fg,
-                                bg=bg,
-                                font=gothic_regular_font,
-                                anchor="w",
-                                justify="left")
-        bubble_label.place(x=14, y=5)  # manual magic number
+            bubble_label = tk.Label(bubble_frame,
+                                    text=bubble_text,
+                                    fg=fg,
+                                    bg=bg,
+                                    font=gothic_regular_font,
+                                    anchor="w",
+                                    justify="left")
+            bubble_label.place(x=14, y=5)  # manual magic number
 
-        avatar_image = pi(file='images/avatar icon1.png')
-        avatar_icon = tk.Label(root, image=avatar_image, borderwidth=0, highlightthickness=0)
-        avatar_icon.place(x=base_x, y=base_y)
+            return bubble_frame
+        else:
+            # Is bot
+            icon_x_offset = -42
 
-        return bubble_frame
+            bubble_frame = tk.Frame(root,
+                                    width=self.bubble_width - icon_x_offset,
+                                    height=self.bubble_height,
+                                    bg=bg)
+            bubble_frame.place(x=self.x + icon_x_offset, y=self.y)
+
+            bubble_text = "\n".join(self.text_slices)
+            # # print(bubble_text)
+
+            bubble_label = tk.Label(bubble_frame,
+                                    text=bubble_text,
+                                    fg=fg,
+                                    bg=bg,
+                                    font=gothic_regular_font,
+                                    anchor="w",
+                                    justify="left")
+            bubble_label.place(x=14-icon_x_offset, y=5)  # manual magic number
+
+            avatar_profile_image = pi(file='images/avatar icon1.png')
+            avatar_profile = tk.Label(bubble_frame, image=avatar_profile_image, borderwidth=0, highlightthickness=0, bg=black)
+            avatar_profile.place(x=0, y=0)
+            avatar_profile.image = avatar_profile_image
+
+            return bubble_frame
 
 class chat:
     def __init__(self):
@@ -265,6 +290,11 @@ listener.start()
 
 ###############################################################
 # ----- Custom Update Function -----
+
+# avatar_profile_image = pi(file='images/avatar icon1.png')
+# avatar_profile = tk.Label(root, image=avatar_profile_image, borderwidth=0, highlightthickness=0, bg=black)
+# avatar_profile.place(x=0, y=0)
+
 
 def update():
     main_chat.render_chat()
