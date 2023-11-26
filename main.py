@@ -242,16 +242,31 @@ def on_focusout(event):
         entry.insert(0, '메세지를 입력하세요')
         entry.config(fg=grey)  # Change text color to grey as a hint
 
+
+gpt_message = ""
 def send_text():
+    global gpt_message
     text = entry.get()
     entry.delete(0, tk.END)
     new_text_bubble = text_bubble(text, False)
     main_chat.add_bubble(new_text_bubble)
     main_chat.render_chat()
 
-    main_chat.add_bubble(text_bubble(bot.send_text(text), True))
+    response = bot.send_text(text)
+    if response == "Inquire GPT-4":
+        add_loading_indicator()
+        gpt_message = text
+        root.after(50, send_gpt_message)
+    else:
+        main_chat.add_bubble(text_bubble(response, True))
     main_chat.render_chat()
 
+def add_loading_indicator():
+    main_chat.add_bubble(text_bubble("Requesting response...", True))
+    main_chat.render_chat()
+
+def send_gpt_message():
+    main_chat.add_bubble(text_bubble(bot.send_text_gpt(gpt_message), True))
 
 top_label = tk.Label(root, text="              Dr.G 도우미 상담",
                      font=gothic_bold_font,
